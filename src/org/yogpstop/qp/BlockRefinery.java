@@ -75,12 +75,28 @@ public class BlockRefinery extends BlockContainer {
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
 		return this.drop;
 	}
+	
+	private static ForgeDirection get2dOrientation(Position pos1, Position pos2) {
+		double Dx = pos1.x - pos2.x;
+		double Dz = pos1.z - pos2.z;
+		double angle = Math.atan2(Dz, Dx) / Math.PI * 180 + 180;
 
+		if (angle < 45 || angle > 315) {
+			return ForgeDirection.EAST;
+		} else if (angle < 135) {
+			return ForgeDirection.SOUTH;
+		} else if (angle < 225) {
+			return ForgeDirection.WEST;
+		} else {
+			return ForgeDirection.NORTH;
+		}
+	}
+	
 	@Override
 	public void onBlockPlacedBy(World w, int x, int y, int z, EntityLivingBase el, ItemStack is) {
 		super.onBlockPlacedBy(w, x, y, z, el, is);
 		EnchantmentHelper.init((IEnchantableTile) w.getBlockTileEntity(x, y, z), is.getEnchantmentTagList());
-		ForgeDirection orientation = Utils.get2dOrientation(new Position(el.posX, el.posY, el.posZ), new Position(x, y, z));
+		ForgeDirection orientation = get2dOrientation(new Position(el.posX, el.posY, el.posZ), new Position(x, y, z));
 		w.setBlockMetadataWithNotify(x, y, z, orientation.getOpposite().ordinal(), 1);
 	}
 

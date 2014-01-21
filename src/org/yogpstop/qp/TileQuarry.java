@@ -467,6 +467,16 @@ public class TileQuarry extends TileBasic {
 		ChunkCoordIntPair quarryChunk = new ChunkCoordIntPair(this.xCoord >> 4, this.zCoord >> 4);
 		chunks.add(quarryChunk);
 		ForgeChunkManager.forceChunk(ticket, quarryChunk);
+		
+		for(int x = this.box.xMin >> 4; x <= this.box.xMax >> 4; x++) {
+			for(int y = this.box.yMin >> 4; y <= this.box.yMax >> 4; y++) {
+				quarryChunk = new ChunkCoordIntPair(x,y);
+				if(!chunks.contains(quarryChunk)) {
+					chunks.add(quarryChunk);
+					ForgeChunkManager.forceChunk(ticket, quarryChunk);
+				}
+			}
+		}
 	}
 
 	void setArm(EntityMechanicalArm ema) {
